@@ -3,199 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor Forex | Tiempo Real</title>
+    <title>Monitor Forex | Estable</title>
     <style>
-        /* DISEÑO FINANCIERO LIMPIO */
+        /* ESTILO FINANCIERO MODERNO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8; /* Azul grisáceo muy suave */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f3f4f6;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #2c3e50;
+            color: #1f2937;
         }
 
         .card {
             background: #ffffff;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             text-align: center;
-            border-top: 5px solid #27ae60; /* Toque verde financiero */
+            border-top: 6px solid #2563eb; /* Azul Profesional */
         }
 
-        h1 { font-size: 1.8rem; margin-bottom: 5px; color: #2c3e50; }
-        .subtitle { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 25px; }
+        h1 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #111; }
+        .subtitle { font-size: 0.95rem; color: #6b7280; margin-bottom: 2rem; }
 
+        .control-group { margin-bottom: 1.5rem; text-align: left; }
+        
         label {
             display: block;
-            text-align: left;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: #34495e;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Estilo del Dropdown */
         select {
             width: 100%;
             padding: 12px;
             font-size: 1rem;
-            border: 2px solid #bdc3c7;
+            border: 2px solid #e5e7eb;
             border-radius: 8px;
             background-color: #fff;
-            margin-bottom: 20px;
             cursor: pointer;
-            outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.2s;
         }
-        select:focus { border-color: #27ae60; }
+        select:focus { outline: none; border-color: #2563eb; }
 
         button {
             width: 100%;
             padding: 14px;
-            background-color: #27ae60;
+            background-color: #2563eb;
             color: white;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.2s;
+            margin-top: 10px;
         }
-        button:hover { background-color: #219150; }
-        button:disabled { background-color: #95a5a6; cursor: wait; }
+        button:hover { background-color: #1d4ed8; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
-        /* Área de Resultado */
+        /* Resultado */
         .result-box {
             margin-top: 25px;
             padding: 20px;
-            background-color: #eafaf1; /* Verde muy claro */
+            background-color: #eff6ff;
             border-radius: 10px;
-            border: 1px solid #d5f5e3;
+            border: 1px solid #dbeafe;
             display: none;
         }
-        .result-box.visible { display: block; animation: fadeIn 0.5s; }
+        .result-box.visible { display: block; animation: slideUp 0.3s ease-out; }
 
-        .rate-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #27ae60;
-            line-height: 1.2;
-        }
-        .rate-pair { font-size: 1rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .main-rate { font-size: 2.5rem; font-weight: 800; color: #2563eb; line-height: 1.1; }
+        .rate-details { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
+        .date-info { font-size: 0.75rem; color: #9ca3af; margin-top: 15px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
 
-        /* Footer Obligatorio por la API */
-        .api-credit {
-            margin-top: 30px;
-            font-size: 0.75rem;
-            color: #bdc3c7;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-        .api-credit img { vertical-align: middle; opacity: 0.7; transition: opacity 0.3s; }
-        .api-credit img:hover { opacity: 1; }
+        .error-msg { background-color: #fef2f2; border-color: #fee2e2; color: #991b1b; }
+        .error-msg .main-rate { color: #dc2626; font-size: 1.2rem; }
 
-        .error-msg { background-color: #fadbd8; border-color: #f5b7b1; color: #c0392b; }
-        .error-msg .rate-value { color: #c0392b; font-size: 1.2rem; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h1>Monitor Forex</h1>
-        <p class="subtitle">Tipos de cambio en tiempo real</p>
+        <h1>Mercado de Divisas</h1>
+        <p class="subtitle">Datos oficiales del Banco Central Europeo</p>
 
-        <label for="currencySelect">Selecciona un Par:</label>
-        <select id="currencySelect">
-            <option value="EURUSD">EUR / USD (Euro a Dólar)</option>
-            <option value="EURGBP">EUR / GBP (Euro a Libra)</option>
-            <option value="GBPUSD">GBP / USD (Libra a Dólar)</option>
-            <option value="USDJPY">USD / JPY (Dólar a Yen)</option>
-            <option value="AUDUSD">AUD / USD (Dólar Aus a EEUU)</option>
-            <option value="USDCHF">USD / CHF (Dólar a Franco Suizo)</option>
-            <option value="NZDUSD">NZD / USD (Dólar NZ a EEUU)</option>
-            <option value="USDCAD">USD / CAD (Dólar a Canadiense)</option>
-            <option value="USDZAR">USD / ZAR (Dólar a Rand)</option>
-        </select>
-
-        <button id="btnConsultar">Consultar Precio</button>
-
-        <div id="resultado" class="result-box">
-            </div>
-
-        <div class="api-credit">
-            Datos proporcionados por:<br><br>
-            <a href="https://www.freeforexapi.com" target="_blank">
-                <img alt="API gratuita de Forex" src="https://www.freeforexapi.com/Images/link.png" height="20">
-            </a>
+        <div class="control-group">
+            <label>Moneda Base (Tengo esto)</label>
+            <select id="fromCurrency">
+                <option value="EUR" selected>🇪🇺 EUR - Euro</option>
+                <option value="USD">🇺🇸 USD - Dólar USA</option>
+                <option value="MXN">🇲🇽 MXN - Peso Mexicano</option>
+                <option value="GBP">🇬🇧 GBP - Libra Esterlina</option>
+                <option value="JPY">🇯🇵 JPY - Yen Japonés</option>
+                <option value="CAD">🇨🇦 CAD - Dólar Canadiense</option>
+            </select>
         </div>
+
+        <div class="control-group">
+            <label>Moneda Destino (Quiero saber esto)</label>
+            <select id="toCurrency">
+                <option value="USD" selected>🇺🇸 USD - Dólar USA</option>
+                <option value="EUR">🇪🇺 EUR - Euro</option>
+                <option value="MXN">🇲🇽 MXN - Peso Mexicano</option>
+                <option value="GBP">🇬🇧 GBP - Libra Esterlina</option>
+                <option value="JPY">🇯🇵 JPY - Yen Japonés</option>
+                <option value="CAD">🇨🇦 CAD - Dólar Canadiense</option>
+            </select>
+        </div>
+
+        <button id="btnConvert">Consultar Tasa de Cambio</button>
+
+        <div id="resultArea" class="result-box"></div>
     </div>
 
     <script>
-        const btn = document.getElementById('btnConsultar');
-        const select = document.getElementById('currencySelect');
-        const resultado = document.getElementById('resultado');
+        const btn = document.getElementById('btnConvert');
+        const fromSelect = document.getElementById('fromCurrency');
+        const toSelect = document.getElementById('toCurrency');
+        const resultArea = document.getElementById('resultArea');
 
         btn.addEventListener('click', function() {
-            const par = select.value;
+            const from = fromSelect.value;
+            const to = toSelect.value;
 
-            // UI: Estado de carga
-            btn.textContent = 'Consultando Mercado...';
+            // Validación simple
+            if (from === to) {
+                showResult('Por favor selecciona monedas diferentes.', true);
+                return;
+            }
+
+            // UI: Carga
+            btn.textContent = 'Analizando mercado...';
             btn.disabled = true;
-            resultado.style.display = 'none';
-            resultado.className = 'result-box'; // Resetear clases de error
+            resultArea.style.display = 'none';
 
-            // 1. Construir URL de la API
-            const apiUrl = `https://www.freeforexapi.com/api/live?pairs=${par}`;
-            
-            // 2. Usar Proxy AllOrigins (Vital para GitHub Pages)
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+            // USAMOS LA API "FRANKFURTER" (Es HTTPS nativa, no requiere proxy)
+            const apiUrl = `https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`;
 
-            fetch(proxyUrl)
+            fetch(apiUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error('Error de red');
+                    if (!response.ok) throw new Error('Error de conexión con Frankfurter');
                     return response.json();
                 })
                 .then(data => {
-                    // AllOrigins devuelve la respuesta en data.contents
-                    // Parseamos el texto JSON que viene dentro
-                    const apiData = JSON.parse(data.contents);
+                    // Frankfurter devuelve: { amount: 1.0, base: "EUR", date: "2023-...", rates: { USD: 1.08 } }
+                    const tasa = data.rates[to];
+                    const fecha = data.date;
 
-                    // Verificar si la API dio código 200 (Éxito)
-                    if (apiData.code === 200 && apiData.rates && apiData.rates[par]) {
-                        const tasa = apiData.rates[par].rate;
-                        
-                        // Mostrar resultado bonito
-                        resultado.innerHTML = `
-                            <div class="rate-pair">${par}</div>
-                            <div class="rate-value">${tasa}</div>
-                        `;
-                        resultado.classList.add('visible');
+                    if (tasa) {
+                        showResult(`
+                            <div class="rate-details">1 ${from} equivale a:</div>
+                            <div class="main-rate">${tasa} ${to}</div>
+                            <div class="date-info">Última actualización: ${fecha}</div>
+                        `, false);
                     } else {
-                        throw new Error('La API no devolvió datos para este par.');
+                        showResult('No hay datos disponibles para este par hoy.', true);
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    resultado.innerHTML = `
-                        <div class="rate-value" style="font-size:1.1rem">⚠️ Error de conexión</div>
-                        <p style="font-size:0.8rem; margin-top:5px;">Intenta de nuevo en unos segundos.</p>
-                    `;
-                    resultado.className = 'result-box visible error-msg';
+                    showResult('Error de conexión. Revisa tu internet.', true);
                 })
                 .finally(() => {
-                    btn.textContent = 'Consultar Precio';
+                    btn.textContent = 'Consultar Tasa de Cambio';
                     btn.disabled = false;
                 });
         });
+
+        function showResult(html, isError) {
+            resultArea.innerHTML = isError ? `<div class="main-rate">⚠️ Error</div><p>${html}</p>` : html;
+            resultArea.className = 'result-box visible' + (isError ? ' error-msg' : '');
+            resultArea.style.display = 'block';
+        }
     </script>
 
 </body>
