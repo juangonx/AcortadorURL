@@ -1,29 +1,46 @@
-const boton = document.getElementById("btn");
-const magnetInput = document.getElementById("magnet");
-const resultado = document.getElementById("resultado");
+const btn = document.getElementById('btn');
+const resultado = document.getElementById('resultado');
+const input = document.getElementById('magnet');
 
-function callback(data) {
-  if (data.state === "success") {
-    resultado.textContent = "URL corta: " + data.shorturl;
-  } else {
-    resultado.textContent = "Error: " + data.message;
-  }
+
+btn.addEventListener('click', acortarMagnet);
+
+
+function acortarMagnet() {
+const magnet = input.value.trim();
+
+
+if (magnet === '') {
+resultado.textContent = 'Por favor ingresa un Magnet URI válido';
+return;
 }
 
-boton.addEventListener("click", () => {
-  const magnet = magnetInput.value.trim();
 
-  if (magnet === "") {
-    resultado.textContent = "Ingresa un Magnet URI";
-    return;
-  }
+const apiURL = `https://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
 
-  const script = document.createElement("script");
-  script.src =
-    "http://mgnet.me/api/create" +
-    "?m=" + encodeURIComponent(magnet) +
-    "&format=jsonp" +
-    "&callback=callback";
 
-  document.body.appendChild(script);
+resultado.textContent = 'Procesando...';
+
+
+fetch('https://mgnet.me/api/create', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: `m=${encodeURIComponent(magnet)}&format=json`
+})
+.then(response => response.json())
+.then(data => {
+if (data.state === 'success') {
+resultado.innerHTML = `
+<strong>URL corta:</strong><br>
+<a href="${data.shorturl}" target="_blank">${data.shorturl}</a>
+`;
+} else {
+resultado.textContent = data.message || 'Error al generar la URL';
+}
+})
+.catch(() => {
+resultado.textContent = 'La API no respondió correctamente';
 });
+}
