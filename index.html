@@ -1,11 +1,22 @@
+Claro que sí. Aquí tienes el código completo y definitivo, con **todos los textos, mensajes de error y etiquetas traducidos al español**, manteniendo el diseño minimalista, elegante y centrado (con el cuadro) que te gustó.
+
+Sigue siendo la versión "infalible" que usa la API de `is.gd`, por lo que **funcionará perfectamente en GitHub Pages** sin errores de conexión.
+
+### Instrucciones
+
+1. Borra todo el contenido de tu archivo `index.html`.
+2. Copia y pega este código.
+3. Guárdalo y súbelo.
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shortener | Minimal</title>
+    <title>Acortador | Estilo Elegante</title>
     <style>
-        /* --- ESTILO MINIMALISTA PURO --- */
+        /* --- ESTILO ELEGANTE & MINIMALISTA --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,121 +24,156 @@
         }
 
         body {
+            /* Fondo gris muy suave para resaltar la tarjeta blanca */
+            background-color: #fcfcfc;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            color: #111;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            color: #333;
         }
 
-        .container {
-            width: 100%;
-            max-width: 480px;
-            padding: 40px;
-            /* Sin sombras pesadas, solo espacio limpio */
+        /* EL CUADRO (La Tarjeta) */
+        .card {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 480px; /* Ancho ideal para lectura */
+            padding: 3.5rem 3rem; /* Espaciado interno amplio y elegante */
+            
+            /* Borde sutil y sombra suave ("elevación") */
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.06);
+            border-radius: 12px;
+            text-align: center;
         }
 
+        /* Título con tipografía Serif (Editorial) */
         h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: normal;
+            font-size: 2rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
 
+        /* Subtítulo pequeño y espaciado */
         p.subtitle {
-            font-size: 0.95rem;
-            color: #666;
-            margin-bottom: 40px;
-            font-weight: 400;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
         }
 
-        /* Input Minimalista */
-        .input-group {
-            margin-bottom: 20px;
-        }
-
+        /* Campo de Texto (Input) */
         input[type="url"] {
             width: 100%;
-            padding: 16px 0;
+            padding: 16px;
             font-size: 1rem;
-            border: none;
-            border-bottom: 1px solid #e0e0e0; /* Solo línea inferior */
-            outline: none;
-            border-radius: 0;
-            transition: border-color 0.3s;
-            background: transparent;
-            color: #111;
-        }
-
-        input[type="url"]::placeholder {
-            color: #999;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            text-align: center; /* Texto centrado */
+            color: #333;
         }
 
         input[type="url"]:focus {
-            border-bottom-color: #000;
+            outline: none;
+            background-color: #fff;
+            border-color: #333; /* Borde oscuro al seleccionar */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Botón Minimalista */
+        input[type="url"]::placeholder {
+            color: #bbb;
+            font-style: italic;
+        }
+
+        /* Botón de Acción */
         button {
             width: 100%;
-            padding: 18px;
-            background-color: #000;
+            padding: 16px;
+            background-color: #222; /* Negro suave */
             color: #fff;
             border: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: opacity 0.2s;
-            border-radius: 0; /* Bordes cuadrados */
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
         }
 
         button:hover {
-            opacity: 0.8;
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         button:disabled {
-            background-color: #ccc;
+            background-color: #ddd;
+            color: #999;
             cursor: default;
+            transform: none;
         }
 
-        /* Resultados */
+        /* Área de Resultados (Oculta al inicio) */
         .result-area {
-            margin-top: 40px;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #f5f5f5;
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.8s ease;
         }
 
         .label {
-            font-size: 0.75rem;
-            color: #999;
+            font-size: 0.7rem;
+            color: #aaa;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .short-link {
-            font-size: 1.25rem;
+            display: block;
+            font-family: 'Georgia', serif; /* Serif para el enlace también */
+            font-size: 1.5rem;
             color: #000;
             text-decoration: none;
-            font-weight: 600;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.2s;
+            margin-bottom: 15px;
+            word-break: break-all;
+            line-height: 1.2;
         }
 
         .short-link:hover {
-            border-bottom-color: #000;
+            text-decoration: underline;
+            text-decoration-color: #ccc;
         }
+
+        .copy-link {
+            font-size: 0.8rem;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 1px dotted #999;
+            padding-bottom: 2px;
+            transition: color 0.2s;
+        }
+        .copy-link:hover { color: #000; border-bottom-style: solid; }
 
         .error-msg {
-            color: #d00;
+            color: #c0392b;
             font-size: 0.9rem;
-            margin-top: 10px;
+            background: #fdf2f2;
+            padding: 10px;
+            border-radius: 6px;
         }
 
+        /* Animación suave de aparición */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -136,15 +182,12 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>Link Shortener</h1>
-        <p class="subtitle">Minimalist URL tool.</p>
+    <div class="card">
+        <h1>Acortador de Enlaces</h1>
+        <p class="subtitle">Simple · Rápido · Elegante</p>
 
-        <div class="input-group">
-            <input type="url" id="urlInput" placeholder="Paste your long URL here..." autocomplete="off">
-        </div>
-
-        <button id="btnShorten">Shorten URL</button>
+        <input type="url" id="urlInput" placeholder="Pega aquí tu enlace largo (http/https)..." autocomplete="off">
+        <button id="btnShorten">Acortar URL</button>
 
         <div id="resultArea" class="result-area">
             </div>
@@ -158,64 +201,91 @@
         btn.addEventListener('click', function() {
             const longUrl = input.value.trim();
 
-            // 1. Validación básica
+            // 1. Validación: Que no esté vacío
             if (!longUrl) {
-                alert('Please enter a URL first.');
+                alert('Por favor, ingresa primero un enlace.');
                 return;
             }
 
-            // 2. Interfaz de carga
-            btn.textContent = 'Processing...';
+            // 2. Interfaz: Mostrar estado "Procesando"
+            btn.textContent = 'Procesando...';
             btn.disabled = true;
             resultArea.style.display = 'none';
 
-            // 3. Preparar JSONP (Callback único)
-            const callbackName = 'minimal_' + Date.now();
+            // 3. Preparar la llamada a la API (JSONP)
+            // Usamos un nombre único para evitar conflictos si haces varios clics
+            const callbackName = 'callback_elegante_' + Date.now();
 
+            // Definir la función que recibirá los datos
             window[callbackName] = function(response) {
-                btn.textContent = 'Shorten URL';
+                // Restaurar botón
+                btn.textContent = 'Acortar URL';
                 btn.disabled = false;
 
                 if (response.shorturl) {
                     showResult(response.shorturl);
                 } else {
-                    showError(response.errormessage || 'An error occurred');
+                    showError('Error: ' + (response.errormessage || 'El enlace no es válido.'));
                 }
 
-                // Limpieza
+                // Limpieza del script temporal
                 document.body.removeChild(document.getElementById('script_' + callbackName));
                 delete window[callbackName];
             };
 
-            // 4. Inyección del Script
+            // 4. Inyectar el Script
+            // API: is.gd (Soporta HTTPS, ideal para GitHub Pages)
             const script = document.createElement('script');
             script.id = 'script_' + callbackName;
-            // API: is.gd (Soporta HTTPS y JSONP)
             script.src = `https://is.gd/create.php?format=json&callback=${callbackName}&url=${encodeURIComponent(longUrl)}`;
             
+            // Manejo de error de red
             script.onerror = function() {
-                btn.textContent = 'Shorten URL';
+                btn.textContent = 'Acortar URL';
                 btn.disabled = false;
-                showError('Connection error. Check your internet.');
+                showError('Error de conexión. Revisa tu internet.');
             };
 
             document.body.appendChild(script);
         });
 
+        // Función para mostrar el resultado exitoso
         function showResult(url) {
             resultArea.style.display = 'block';
             resultArea.innerHTML = `
-                <div class="label">Shortened Link</div>
+                <div class="label">Tu enlace corto</div>
                 <a href="${url}" target="_blank" class="short-link">${url}</a>
-                <div style="margin-top:10px; font-size:0.8rem; color:#666; cursor:pointer;" onclick="navigator.clipboard.writeText('${url}')">[ Copy to Clipboard ]</div>
+                <span class="copy-link" onclick="copiar('${url}')">Copiar al portapapeles</span>
             `;
         }
 
+        // Función para mostrar errores
         function showError(msg) {
             resultArea.style.display = 'block';
             resultArea.innerHTML = `<div class="error-msg">${msg}</div>`;
+        }
+
+        // Función para copiar texto
+        function copiar(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const link = document.querySelector('.copy-link');
+                const textoOriginal = link.textContent;
+                
+                link.textContent = '¡Copiado con éxito!';
+                link.style.color = '#27ae60'; // Verde éxito
+                link.style.border = 'none';
+
+                // Volver al texto original después de 2 segundos
+                setTimeout(() => {
+                    link.textContent = 'Copiar al portapapeles';
+                    link.style.color = '#666';
+                    link.style.borderBottom = '1px dotted #999';
+                }, 2000);
+            });
         }
     </script>
 
 </body>
 </html>
+
+```
