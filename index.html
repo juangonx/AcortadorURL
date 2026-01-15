@@ -3,138 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador URL | Infalible</title>
+    <title>Shortener | Minimal</title>
     <style>
-        /* ESTILO MODERNO Y LIMPIO */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* --- ESTILO MINIMALISTA PURO --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #111;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #333;
+            height: 100vh;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { margin-bottom: 10px; color: #2d3748; font-size: 1.8rem; }
-        p { color: #718096; margin-bottom: 30px; font-size: 0.95rem; }
-
-        .input-group { position: relative; margin-bottom: 20px; }
-
-        input {
+        .container {
             width: 100%;
-            padding: 15px 15px 15px 45px; /* Espacio para icono */
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            max-width: 480px;
+            padding: 40px;
+            /* Sin sombras pesadas, solo espacio limpio */
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Input Minimalista */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 16px 0;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            border: none;
+            border-bottom: 1px solid #e0e0e0; /* Solo línea inferior */
             outline: none;
+            border-radius: 0;
+            transition: border-color 0.3s;
+            background: transparent;
+            color: #111;
         }
 
-        input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-
-        /* Icono de enlace simulado con CSS */
-        .icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: #a0aec0;
+        input[type="url"]::placeholder {
+            color: #999;
         }
 
+        input[type="url"]:focus {
+            border-bottom-color: #000;
+        }
+
+        /* Botón Minimalista */
         button {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #667eea, #764ba2);
-            color: white;
+            padding: 18px;
+            background-color: #000;
+            color: #fff;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.2s;
+            border-radius: 0; /* Bordes cuadrados */
         }
 
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4); }
-        button:active { transform: translateY(0); }
-        button:disabled { opacity: 0.7; cursor: wait; transform: none; }
-
-        /* RESULTADO */
-        .result-container {
-            margin-top: 25px;
-            display: none; /* Oculto por defecto */
+        button:hover {
+            opacity: 0.8;
         }
 
-        .success-box {
-            background: #f0fff4;
-            border: 1px solid #c6f6d5;
-            padding: 15px;
-            border-radius: 10px;
-            color: #2f855a;
+        button:disabled {
+            background-color: #ccc;
+            cursor: default;
         }
 
-        .error-box {
-            background: #fff5f5;
-            border: 1px solid #fed7d7;
-            padding: 15px;
-            border-radius: 10px;
-            color: #c53030;
+        /* Resultados */
+        .result-area {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .short-url {
-            font-size: 1.4rem;
-            font-weight: bold;
-            word-break: break-all;
-            display: block;
-            margin: 10px 0;
-            color: #553c9a;
+        .label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .short-link {
+            font-size: 1.25rem;
+            color: #000;
             text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
         }
-        
-        .short-url:hover { text-decoration: underline; }
 
-        .copy-btn {
-            background: white;
-            border: 1px solid #cbd5e0;
-            color: #4a5568;
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            cursor: pointer;
+        .short-link:hover {
+            border-bottom-color: #000;
         }
-        .copy-btn:hover { background: #edf2f7; }
 
+        .error-msg {
+            color: #d00;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Acortador URL</h1>
-        <p>Introduce un enlace largo (http/https)</p>
+    <div class="container">
+        <h1>Link Shortener</h1>
+        <p class="subtitle">Minimalist URL tool.</p>
 
         <div class="input-group">
-            <span class="icon">🔗</span>
-            <input type="url" id="urlInput" placeholder="https://ejemplo.com/enlace-muy-largo..." autocomplete="off">
+            <input type="url" id="urlInput" placeholder="Paste your long URL here..." autocomplete="off">
         </div>
 
-        <button id="btnShorten">✨ Acortar Enlace</button>
+        <button id="btnShorten">Shorten URL</button>
 
-        <div id="resultArea" class="result-container"></div>
+        <div id="resultArea" class="result-area">
+            </div>
     </div>
 
     <script>
@@ -145,75 +158,62 @@
         btn.addEventListener('click', function() {
             const longUrl = input.value.trim();
 
-            // 1. Validar que sea un enlace web real
-            if (!longUrl || (!longUrl.startsWith('http://') && !longUrl.startsWith('https://'))) {
-                showError('Por favor ingresa un enlace válido que empiece con http:// o https://');
+            // 1. Validación básica
+            if (!longUrl) {
+                alert('Please enter a URL first.');
                 return;
             }
 
-            // 2. Estado de carga
-            btn.textContent = 'Procesando...';
+            // 2. Interfaz de carga
+            btn.textContent = 'Processing...';
             btn.disabled = true;
             resultArea.style.display = 'none';
 
-            // 3. NOMBRE ÚNICO PARA EL CALLBACK
-            // Esto evita conflictos si haces clic muchas veces
-            const callbackName = 'isgd_' + Date.now();
+            // 3. Preparar JSONP (Callback único)
+            const callbackName = 'minimal_' + Date.now();
 
-            // 4. FUNCIÓN QUE RECIBE LA RESPUESTA (JSONP)
             window[callbackName] = function(response) {
-                btn.textContent = '✨ Acortar Enlace';
+                btn.textContent = 'Shorten URL';
                 btn.disabled = false;
 
                 if (response.shorturl) {
-                    showSuccess(response.shorturl);
+                    showResult(response.shorturl);
                 } else {
-                    showError('Error: ' + (response.errormessage || 'No se pudo acortar'));
+                    showError(response.errormessage || 'An error occurred');
                 }
 
-                // Limpiar: Borramos el script y la función temporal
+                // Limpieza
                 document.body.removeChild(document.getElementById('script_' + callbackName));
                 delete window[callbackName];
             };
 
-            // 5. CREAR EL SCRIPT DE LA PETICIÓN
-            // Usamos la API de is.gd que es muy estable
+            // 4. Inyección del Script
             const script = document.createElement('script');
             script.id = 'script_' + callbackName;
+            // API: is.gd (Soporta HTTPS y JSONP)
             script.src = `https://is.gd/create.php?format=json&callback=${callbackName}&url=${encodeURIComponent(longUrl)}`;
             
-            // Manejo de errores de red (si is.gd estuviera caído)
             script.onerror = function() {
-                btn.textContent = '✨ Acortar Enlace';
+                btn.textContent = 'Shorten URL';
                 btn.disabled = false;
-                showError('Error de conexión. Revisa tu internet.');
-                delete window[callbackName];
+                showError('Connection error. Check your internet.');
             };
 
             document.body.appendChild(script);
         });
 
-        // FUNCIONES VISUALES
-        function showSuccess(shortUrl) {
+        function showResult(url) {
             resultArea.style.display = 'block';
             resultArea.innerHTML = `
-                <div class="success-box">
-                    <div>¡Listo! Tu enlace corto:</div>
-                    <a href="${shortUrl}" target="_blank" class="short-url">${shortUrl}</a>
-                    <button class="copy-btn" onclick="copiar('${shortUrl}')">Copiar</button>
-                </div>
+                <div class="label">Shortened Link</div>
+                <a href="${url}" target="_blank" class="short-link">${url}</a>
+                <div style="margin-top:10px; font-size:0.8rem; color:#666; cursor:pointer;" onclick="navigator.clipboard.writeText('${url}')">[ Copy to Clipboard ]</div>
             `;
         }
 
         function showError(msg) {
             resultArea.style.display = 'block';
-            resultArea.innerHTML = `<div class="error-box">⚠️ ${msg}</div>`;
-        }
-
-        function copiar(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('¡Copiado al portapapeles!');
-            });
+            resultArea.innerHTML = `<div class="error-msg">${msg}</div>`;
         }
     </script>
 
