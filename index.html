@@ -3,82 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador Magnet | GitHub Edition</title>
+    <title>Acortador Magnet | GitHub</title>
     <style>
-        /* ESTILO MINIMALISTA */
+        /* ESTILOS (No tocar) */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             color: #333;
         }
-
         .container {
             background: #fff;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             width: 90%;
             max-width: 450px;
             text-align: center;
         }
-
-        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #111; }
-        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
-
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        p { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        
         input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #e1e1e1;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
         }
-
         input:focus { outline: none; border-color: #333; }
-
+        
         button {
             width: 100%;
             padding: 12px;
-            background-color: #111;
+            background-color: #000;
             color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
         }
-
-        button:hover { opacity: 0.85; }
-        button:disabled { background-color: #ccc; cursor: wait; }
-
+        button:hover { opacity: 0.8; }
+        button:disabled { background-color: #999; cursor: not-allowed; }
+        
         .result {
             margin-top: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: #eef3f7;
             border-radius: 8px;
             display: none;
-            word-break: break-all;
-            border: 1px solid #eee;
             text-align: left;
+            word-break: break-all;
+            border: 1px solid #dbe2e8;
         }
-        
         .result.visible { display: block; }
-        .result a { color: #0070f3; font-weight: bold; text-decoration: none; }
-        .error-msg { color: #c00; background: #fff0f0; border-color: #ffcccc; }
+        .result a { color: #0066cc; font-weight: bold; text-decoration: none; }
+        .error { color: #d32f2f; background: #fde8e8; border-color: #fad4d4; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Magnet Shortener</h1>
-        <p class="subtitle">Compatible con GitHub Pages</p>
+        <h1>Acortador Magnet</h1>
+        <p>Solución con Proxy "AllOrigins"</p>
 
         <input type="text" id="magnetInput" placeholder="Pega el enlace magnet aquí..." autocomplete="off">
         <button id="btnShorten">Acortar Enlace</button>
@@ -99,36 +92,44 @@
                 return;
             }
 
-            // 1. ESTADO DE CARGA
+            // 1. Mostrar carga
             btn.textContent = 'Procesando...';
             btn.disabled = true;
             resultArea.style.display = 'none';
 
-            // 2. CONFIGURACIÓN DEL PROXY (Vital para GitHub)
-            // Usamos 'corsproxy.io' para convertir la petición insegura en segura
-            const apiUrl = `http://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+            // 2. NUEVO PUENTE (AllOrigins)
+            // Este proxy es diferente al anterior y evita el error 429
+            const targetApi = `http://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetApi)}`;
 
-            // 3. PETICIÓN FETCH
             fetch(proxyUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error('Error de red');
+                    if (!response.ok) throw new Error('Error de red en el proxy');
                     return response.json();
                 })
                 .then(data => {
-                    // mgnet.me devuelve: { state: "success", shorturl: "..." }
-                    if (data.state === 'success' || data.shorturl) {
-                        showResult(`
-                            <div style="font-size:0.8rem; color:#666; margin-bottom:5px;">LISTO:</div>
-                            <a href="${data.shorturl}" target="_blank">${data.shorturl}</a>
-                        `, false);
-                    } else {
-                        showResult('Error: ' + (data.message || 'No se pudo acortar.'), true);
+                    // AllOrigins devuelve la respuesta real dentro de "contents"
+                    // Intentamos convertir ese texto a JSON
+                    try {
+                        const apiResponse = JSON.parse(data.contents);
+
+                        if (apiResponse.state === 'success' || apiResponse.shorturl) {
+                            showResult(`
+                                <div style="font-size:0.8rem; color:#555; margin-bottom:5px;">TU ENLACE:</div>
+                                <a href="${apiResponse.shorturl}" target="_blank">${apiResponse.shorturl}</a>
+                            `, false);
+                        } else {
+                            showResult('Error: ' + (apiResponse.message || 'No se pudo generar.'), true);
+                        }
+                    } catch (e) {
+                        // Si mgnet.me falla, devuelve HTML en vez de JSON
+                        console.error('Error al leer respuesta:', data.contents);
+                        showResult('Error: La API de mgnet.me no devolvió datos válidos. Intenta más tarde.', true);
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    showResult('Error de conexión. El proxy puede estar saturado.', true);
+                    showResult('Error de conexión. El proxy puede estar lento.', true);
                 })
                 .finally(() => {
                     btn.textContent = 'Acortar Enlace';
@@ -138,7 +139,7 @@
 
         function showResult(html, isError) {
             resultArea.innerHTML = html;
-            resultArea.className = 'result visible' + (isError ? ' error-msg' : '');
+            resultArea.className = 'result visible' + (isError ? ' error' : '');
         }
     </script>
 
