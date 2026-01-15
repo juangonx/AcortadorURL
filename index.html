@@ -3,144 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador Magnet | GitHub</title>
+    <title>Monitor Forex | Tiempo Real</title>
     <style>
-        /* ESTILOS (No tocar) */
+        /* DISEÑO FINANCIERO LIMPIO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* Azul grisáceo muy suave */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #333;
+            color: #2c3e50;
         }
-        .container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+
+        .card {
+            background: #ffffff;
             width: 90%;
-            max-width: 450px;
+            max-width: 400px;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             text-align: center;
+            border-top: 5px solid #27ae60; /* Toque verde financiero */
         }
-        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        p { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        
-        input {
+
+        h1 { font-size: 1.8rem; margin-bottom: 5px; color: #2c3e50; }
+        .subtitle { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 25px; }
+
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #34495e;
+        }
+
+        /* Estilo del Dropdown */
+        select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
             font-size: 1rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
         }
-        input:focus { outline: none; border-color: #333; }
-        
+        select:focus { border-color: #27ae60; }
+
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
+            padding: 14px;
+            background-color: #27ae60;
+            color: white;
             font-size: 1rem;
             font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover { opacity: 0.8; }
-        button:disabled { background-color: #999; cursor: not-allowed; }
-        
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eef3f7;
+            border: none;
             border-radius: 8px;
-            display: none;
-            text-align: left;
-            word-break: break-all;
-            border: 1px solid #dbe2e8;
+            cursor: pointer;
+            transition: background 0.3s;
         }
-        .result.visible { display: block; }
-        .result a { color: #0066cc; font-weight: bold; text-decoration: none; }
-        .error { color: #d32f2f; background: #fde8e8; border-color: #fad4d4; }
+        button:hover { background-color: #219150; }
+        button:disabled { background-color: #95a5a6; cursor: wait; }
+
+        /* Área de Resultado */
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #eafaf1; /* Verde muy claro */
+            border-radius: 10px;
+            border: 1px solid #d5f5e3;
+            display: none;
+        }
+        .result-box.visible { display: block; animation: fadeIn 0.5s; }
+
+        .rate-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #27ae60;
+            line-height: 1.2;
+        }
+        .rate-pair { font-size: 1rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Footer Obligatorio por la API */
+        .api-credit {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #bdc3c7;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .api-credit img { vertical-align: middle; opacity: 0.7; transition: opacity 0.3s; }
+        .api-credit img:hover { opacity: 1; }
+
+        .error-msg { background-color: #fadbd8; border-color: #f5b7b1; color: #c0392b; }
+        .error-msg .rate-value { color: #c0392b; font-size: 1.2rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Acortador Magnet</h1>
-        <p>Solución con Proxy "AllOrigins"</p>
+    <div class="card">
+        <h1>Monitor Forex</h1>
+        <p class="subtitle">Tipos de cambio en tiempo real</p>
 
-        <input type="text" id="magnetInput" placeholder="Pega el enlace magnet aquí..." autocomplete="off">
-        <button id="btnShorten">Acortar Enlace</button>
+        <label for="currencySelect">Selecciona un Par:</label>
+        <select id="currencySelect">
+            <option value="EURUSD">EUR / USD (Euro a Dólar)</option>
+            <option value="EURGBP">EUR / GBP (Euro a Libra)</option>
+            <option value="GBPUSD">GBP / USD (Libra a Dólar)</option>
+            <option value="USDJPY">USD / JPY (Dólar a Yen)</option>
+            <option value="AUDUSD">AUD / USD (Dólar Aus a EEUU)</option>
+            <option value="USDCHF">USD / CHF (Dólar a Franco Suizo)</option>
+            <option value="NZDUSD">NZD / USD (Dólar NZ a EEUU)</option>
+            <option value="USDCAD">USD / CAD (Dólar a Canadiense)</option>
+            <option value="USDZAR">USD / ZAR (Dólar a Rand)</option>
+        </select>
 
-        <div id="resultArea" class="result"></div>
+        <button id="btnConsultar">Consultar Precio</button>
+
+        <div id="resultado" class="result-box">
+            </div>
+
+        <div class="api-credit">
+            Datos proporcionados por:<br><br>
+            <a href="https://www.freeforexapi.com" target="_blank">
+                <img alt="API gratuita de Forex" src="https://www.freeforexapi.com/Images/link.png" height="20">
+            </a>
+        </div>
     </div>
 
     <script>
-        const btn = document.getElementById('btnShorten');
-        const input = document.getElementById('magnetInput');
-        const resultArea = document.getElementById('resultArea');
+        const btn = document.getElementById('btnConsultar');
+        const select = document.getElementById('currencySelect');
+        const resultado = document.getElementById('resultado');
 
         btn.addEventListener('click', function() {
-            const magnet = input.value.trim();
+            const par = select.value;
 
-            if (!magnet) {
-                alert('Por favor, pega un enlace primero.');
-                return;
-            }
-
-            // 1. Mostrar carga
-            btn.textContent = 'Procesando...';
+            // UI: Estado de carga
+            btn.textContent = 'Consultando Mercado...';
             btn.disabled = true;
-            resultArea.style.display = 'none';
+            resultado.style.display = 'none';
+            resultado.className = 'result-box'; // Resetear clases de error
 
-            // 2. NUEVO PUENTE (AllOrigins)
-            // Este proxy es diferente al anterior y evita el error 429
-            const targetApi = `http://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetApi)}`;
+            // 1. Construir URL de la API
+            const apiUrl = `https://www.freeforexapi.com/api/live?pairs=${par}`;
+            
+            // 2. Usar Proxy AllOrigins (Vital para GitHub Pages)
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
             fetch(proxyUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error('Error de red en el proxy');
+                    if (!response.ok) throw new Error('Error de red');
                     return response.json();
                 })
                 .then(data => {
-                    // AllOrigins devuelve la respuesta real dentro de "contents"
-                    // Intentamos convertir ese texto a JSON
-                    try {
-                        const apiResponse = JSON.parse(data.contents);
+                    // AllOrigins devuelve la respuesta en data.contents
+                    // Parseamos el texto JSON que viene dentro
+                    const apiData = JSON.parse(data.contents);
 
-                        if (apiResponse.state === 'success' || apiResponse.shorturl) {
-                            showResult(`
-                                <div style="font-size:0.8rem; color:#555; margin-bottom:5px;">TU ENLACE:</div>
-                                <a href="${apiResponse.shorturl}" target="_blank">${apiResponse.shorturl}</a>
-                            `, false);
-                        } else {
-                            showResult('Error: ' + (apiResponse.message || 'No se pudo generar.'), true);
-                        }
-                    } catch (e) {
-                        // Si mgnet.me falla, devuelve HTML en vez de JSON
-                        console.error('Error al leer respuesta:', data.contents);
-                        showResult('Error: La API de mgnet.me no devolvió datos válidos. Intenta más tarde.', true);
+                    // Verificar si la API dio código 200 (Éxito)
+                    if (apiData.code === 200 && apiData.rates && apiData.rates[par]) {
+                        const tasa = apiData.rates[par].rate;
+                        
+                        // Mostrar resultado bonito
+                        resultado.innerHTML = `
+                            <div class="rate-pair">${par}</div>
+                            <div class="rate-value">${tasa}</div>
+                        `;
+                        resultado.classList.add('visible');
+                    } else {
+                        throw new Error('La API no devolvió datos para este par.');
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    showResult('Error de conexión. El proxy puede estar lento.', true);
+                    resultado.innerHTML = `
+                        <div class="rate-value" style="font-size:1.1rem">⚠️ Error de conexión</div>
+                        <p style="font-size:0.8rem; margin-top:5px;">Intenta de nuevo en unos segundos.</p>
+                    `;
+                    resultado.className = 'result-box visible error-msg';
                 })
                 .finally(() => {
-                    btn.textContent = 'Acortar Enlace';
+                    btn.textContent = 'Consultar Precio';
                     btn.disabled = false;
                 });
         });
-
-        function showResult(html, isError) {
-            resultArea.innerHTML = html;
-            resultArea.className = 'result visible' + (isError ? ' error' : '');
-        }
     </script>
 
 </body>
