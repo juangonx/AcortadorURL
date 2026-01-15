@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador Magnet | Estable</title>
+    <title>Acortador Magnet | GitHub Edition</title>
     <style>
-        /* ESTILOS (Minimalista) */
+        /* ESTILO MINIMALISTA */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -15,71 +15,73 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #222;
+            color: #333;
         }
 
         .container {
             background: #fff;
             padding: 2.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             width: 90%;
             max-width: 450px;
             text-align: center;
         }
 
-        h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
-        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #111; }
+        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
 
         input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             margin-bottom: 15px;
-            border: 2px solid #ddd;
+            border: 2px solid #e1e1e1;
             border-radius: 8px;
             font-size: 1rem;
+            transition: border-color 0.3s;
         }
 
         input:focus { outline: none; border-color: #333; }
 
         button {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background-color: #111;
             color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
         }
 
-        button:hover { opacity: 0.9; }
-        button:disabled { background-color: #999; cursor: wait; }
+        button:hover { opacity: 0.85; }
+        button:disabled { background-color: #ccc; cursor: wait; }
 
         .result {
-            margin-top: 25px;
+            margin-top: 20px;
             padding: 15px;
-            background: #eef2f5;
+            background: #f8f9fa;
             border-radius: 8px;
             display: none;
             word-break: break-all;
+            border: 1px solid #eee;
             text-align: left;
         }
         
         .result.visible { display: block; }
         .result a { color: #0070f3; font-weight: bold; text-decoration: none; }
-        .error-msg { color: #c00; background: #ffebeb; border: 1px solid #ffcccc; }
+        .error-msg { color: #c00; background: #fff0f0; border-color: #ffcccc; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Magnet Shortener</h1>
-        <p class="subtitle">Versión Estable (Proxy Directo)</p>
+        <p class="subtitle">Compatible con GitHub Pages</p>
 
         <input type="text" id="magnetInput" placeholder="Pega el enlace magnet aquí..." autocomplete="off">
-        <button id="btnShorten">Acortar Ahora</button>
+        <button id="btnShorten">Acortar Enlace</button>
 
         <div id="resultArea" class="result"></div>
     </div>
@@ -97,26 +99,27 @@
                 return;
             }
 
-            // UI: Mostrar carga
-            btn.textContent = 'Generando...';
+            // 1. ESTADO DE CARGA
+            btn.textContent = 'Procesando...';
             btn.disabled = true;
             resultArea.style.display = 'none';
 
-            // CONFIGURACIÓN DE URL
-            // Usamos corsproxy.io que es más transparente con JSON
-            const originalApi = `http://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(originalApi)}`;
+            // 2. CONFIGURACIÓN DEL PROXY (Vital para GitHub)
+            // Usamos 'corsproxy.io' para convertir la petición insegura en segura
+            const apiUrl = `http://mgnet.me/api/create?m=${encodeURIComponent(magnet)}&format=json`;
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
 
+            // 3. PETICIÓN FETCH
             fetch(proxyUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error('Error en la red');
+                    if (!response.ok) throw new Error('Error de red');
                     return response.json();
                 })
                 .then(data => {
-                    // mgnet.me devuelve { state: "success", shorturl: "..." }
+                    // mgnet.me devuelve: { state: "success", shorturl: "..." }
                     if (data.state === 'success' || data.shorturl) {
                         showResult(`
-                            <div style="font-size:0.8rem; color:#666; margin-bottom:5px;">TU ENLACE CORTO:</div>
+                            <div style="font-size:0.8rem; color:#666; margin-bottom:5px;">LISTO:</div>
                             <a href="${data.shorturl}" target="_blank">${data.shorturl}</a>
                         `, false);
                     } else {
@@ -124,11 +127,11 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Detalle del error:', error);
-                    showResult('Error de conexión. Intenta de nuevo en unos segundos.', true);
+                    console.error(error);
+                    showResult('Error de conexión. El proxy puede estar saturado.', true);
                 })
                 .finally(() => {
-                    btn.textContent = 'Acortar Ahora';
+                    btn.textContent = 'Acortar Enlace';
                     btn.disabled = false;
                 });
         });
