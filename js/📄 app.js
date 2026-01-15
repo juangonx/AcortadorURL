@@ -1,30 +1,29 @@
-
 const boton = document.getElementById("btn");
-const magnet = document.getElementById("magnet");
+const magnetInput = document.getElementById("magnet");
 const resultado = document.getElementById("resultado");
 
-boton.addEventListener("click", () => {
+function callback(data) {
+  if (data.state === "success") {
+    resultado.textContent = "URL corta: " + data.shorturl;
+  } else {
+    resultado.textContent = "Error: " + data.message;
+  }
+}
 
-  if (magnet.value === "") {
-    resultado.textContent = "Pega un Magnet URI";
+boton.addEventListener("click", () => {
+  const magnet = magnetInput.value.trim();
+
+  if (magnet === "") {
+    resultado.textContent = "Ingresa un Magnet URI";
     return;
   }
 
-  const url = "http://mgnet.me/api/create?m=" +
-              encodeURIComponent(magnet.value) +
-              "&format=json";
+  const script = document.createElement("script");
+  script.src =
+    "http://mgnet.me/api/create" +
+    "?m=" + encodeURIComponent(magnet) +
+    "&format=jsonp" +
+    "&callback=callback";
 
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      if (data.state === "success") {
-        resultado.textContent = data.shorturl;
-      } else {
-        resultado.textContent = "Error al acortar";
-      }
-    })
-    .catch(() => {
-      resultado.textContent = "Error de conexión";
-    });
-
+  document.body.appendChild(script);
 });
