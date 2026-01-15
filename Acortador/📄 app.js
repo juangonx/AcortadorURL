@@ -14,32 +14,30 @@ function acortarMagnet() {
 
     resultado.textContent = 'Procesando...';
     
-    // Definimos un nombre único para la función callback
-    const callbackName = 'jsonp_callback_' + Math.floor(Math.random() * 100000);
+    // Nombre único para evitar conflictos
+    const callbackName = 'cb_' + Math.floor(Math.random() * 100000);
 
-    // Creamos la función global que la API llamará
+    // Función que recibe la respuesta de la API
     window[callbackName] = function(data) {
         if (data.state === 'success') {
             resultado.innerHTML = `
-                <strong>URL Corta:</strong><br>
+                <strong>¡Listo! URL Corta:</strong><br>
                 <a href="${data.shorturl}" target="_blank">${data.shorturl}</a>
             `;
         } else {
-            resultado.textContent = 'Error: ' + (data.message || 'No se pudo crear');
+            resultado.textContent = 'Error: ' + (data.message || 'Falló la conversión');
         }
         // Limpieza
         document.body.removeChild(script);
         delete window[callbackName];
     };
 
-    // Crear el elemento script para saltar restricciones de CORS
+    // Creación del script (JSONP)
     const script = document.createElement('script');
-    // Usamos m para el magnet y callback para JSONP según la documentación
     script.src = `http://mgnet.me/api/create?m=${encodeURIComponent(magnetUri)}&format=json&callback=${callbackName}`;
     
     script.onerror = () => {
-        resultado.textContent = 'Error: La API no responde (Verifica que no estés en HTTPS)';
-        document.body.removeChild(script);
+        resultado.textContent = 'Error de conexión. (Recuerda no usar HTTPS)';
         delete window[callbackName];
     };
 
